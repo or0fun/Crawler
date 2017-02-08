@@ -8,7 +8,8 @@ from HTMLParser import HTMLParser
 class BdResultsParser(HTMLParser):
 
     def __init__(self):   
-        HTMLParser.__init__(self)   
+        HTMLParser.__init__(self) 
+
         self.results = []
         self.isResult = False
         self.isCTitle = False
