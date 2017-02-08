@@ -18,8 +18,12 @@ try:
     content = response.read().decode('utf-8')
     parser = BdResultsParser()
     parser.feed(content)
+
     for result in parser.results:
         print result.title
+        print result.site
+        print result.date
+        print result.link
         pass
 
 except urllib2.URLError, e:
