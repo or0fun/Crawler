@@ -23,7 +23,7 @@ class BdResultsParser(HTMLParser):
     def is_result_title(self,tag,attrs):
         if tag == 'div' and attrs:
             for key, value in attrs:
-                if key == 'class' and value == 'result title':
+                if key == 'class' and value.find('result title') > -1:
                     return True
         return False
 
@@ -47,55 +47,70 @@ class BdResultsParser(HTMLParser):
 
     def handle_starttag(self,tag,attrs):
 
-        self.tags.append(Tag(tag, attrs))
-
         if self.is_result_title(tag, attrs):
             self.isResult = True
             self.info = Info()
-            pass
+
+        if self.isResult:
+            self.tags.append(Tag(tag, attrs))
+        else:
+            return
+
         if self.is_c_title(tag, attrs):
             self.isCTitle = True
-            pass
+            return
 
         if self.isCTitle and tag == 'a':
             for key, value in attrs:
                 if key == 'href':
                     self.info.link = value
-                    pass
+                    return
 
         if self.is_c_title_author(tag, attrs):
             self.isAuthor = True
-            pass
+            return
 
-
-    def handle_startendtag(self,tag,attrs):
-        pass
+        if self.isAuthor and tag == 'a':
+            for key, value in attrs:
+                if key == 'href':
+                    if value.startswith('http'): 
+                        self.info.children = value
+                    else:
+                        self.info.children = "http://news.baidu.com/" + value
+                    return
 
     def handle_endtag(self,tag):
+
+        if self.isResult == False:
+            return
+
         tag = self.tags.pop()
         if self.is_result_title(tag.tag, tag.attrs):
             self.isResult = False
             self.results.append(self.info)
-            pass
+            return
 
         if self.isResult:
             if self.is_c_title(tag.tag, tag.attrs):
                 self.isCTitle = False
                 self.info.title = self.title_tmp
                 self.title_tmp = ""
-                pass
+                return
             if self.is_c_title_author(tag.tag, tag.attrs):
                 self.isAuthor = False
-                pass
+                return
 
     def handle_data(self,data):
+        if self.isResult == False:
+            return
+
         if self.isCTitle:
             self.title_tmp += data
-            pass
+            return
         if self.isAuthor and self.tags[-1].tag == 'div':
             if self.info.site == "":
                 self.info.site = data
-                pass
+                return
             self.info.date = data
-            pass
+            return
          
