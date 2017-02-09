@@ -1,4 +1,11 @@
 
+class Behavior(object):
+    """docstring for Comment"""
+    def __init__(self, comments, views):
+        super(Behavior, self).__init__()
+        self.comments = comments
+        self.views = views
+        
 class Tag(object):
     tag = 0
     attrs = []
@@ -8,8 +15,9 @@ class Tag(object):
     pass
 
 class Info(object):
-	title = ""
-	date = ""
-	site = ""
-	link = ""
-	children = ""
+    title = ""
+    date = ""
+    site = ""
+    link = ""
+    children = ""
+    behavior = Behavior(0, 0)
