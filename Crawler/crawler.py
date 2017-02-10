@@ -1,4 +1,5 @@
-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
 
 import urllib
 import urllib2
@@ -22,6 +23,8 @@ class Crawler(object):
 		self.realResults = []
 		self.bd_total_count = 0
 
+		self.fromdate = ""
+
 	def request_content(self, url):
 		try:
 		    request = urllib2.Request(url, headers = self.headers)
@@ -44,21 +47,26 @@ class Crawler(object):
 	    length = len(parser.results)
 
 	    self.bd_total_count += length
-	    
-	    if length < 20:
-	    	bd_result = False
 
 	    for result in parser.results:
 	        if result.children.find('http') > -1:
 	        	self.bd_crawler(result.children)
 	        else:
-	        	self.realResults.append(result)
+	        	if self.is_time_valid(self.fromdate, result.date):
+	        		self.realResults.append(result)
+	        		self.bd_result = True
+	        	else:
+	        		self.bd_result = False
 
-	def bdrun(self, words, index):
+	    if length < 20:
+	    	self.bd_result = False
 
+	def bdrun(self, words, fromdate, index):
+
+		self.fromdate = fromdate
 		words = words.replace(' ', '+')
 
-		url = 'http://news.baidu.com/ns?word=title%3A%28'+ str(words) + '%29&pn=' + str(index) + '&cl=2&ct=1&tn=newstitle&rn=20&ie=utf-8&bt=0&et=0'
+		url = 'http://news.baidu.com/ns?word=title%3A%28'+ str(words) + '%29&pn=' + str(index) + '&cl=2&ct=1&tn=newstitle&rn=20&ie=utf-8&bt=0&et=0&clk=sortbytime'
 		
 		self.bd_crawler(url)
 
@@ -93,6 +101,18 @@ class Crawler(object):
 			return Behavior(searchObj.group(1), 0)
 
 		return Behavior(0, 0)
+
+	def is_time_valid(self, frome_date, news_date):
+		from_time = time.mktime(time.strptime(frome_date,'%Y-%m-%d')) # get the seconds for specify date
+		if news_date.find('年') == -1:
+			return True
+		space_index = news_date.find(' ')
+		news_date = news_date[0:space_index]
+		news_time = time.mktime(time.strptime(news_date,'%Y年%m月%d日'))
+		if (float(news_time) >= float(from_time)):
+			return True
+		print news_date
+		return False
 
 
 

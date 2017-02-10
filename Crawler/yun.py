@@ -11,13 +11,13 @@ crawler = Crawler()
 bd_index = 0
 
 words = sys.argv[1]
+fromdate = sys.argv[2]
 
 while True:
-    crawler.bdrun(words, bd_index)
+    crawler.bdrun(words, fromdate, bd_index)
     if False == crawler.bd_result:
         break
     bd_index += 20
-    break
 
 # for result in crawler.realResults:
 #     print result.title
@@ -52,4 +52,4 @@ for result in crawler.realResults:
     row = row + 1
 
 
-f.save(sys.path[0] + "/" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + "_" + words + '.xls')
+f.save("output/" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + "_" + words + '.xls')

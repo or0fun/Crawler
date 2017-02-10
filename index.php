@@ -75,7 +75,10 @@
 			$(document).ready(function(){
 				$("#crawler").click(function(){
 					$("#crawler").html("正在爬...一会儿来刷新");
-					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val(),async:true});
+					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val() + 
+						"&fromdate=" +
+						$("#fromdate").val(),
+						async:true});
 				});
 			});
 		</script>
