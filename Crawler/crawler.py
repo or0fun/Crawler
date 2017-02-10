@@ -111,7 +111,6 @@ class Crawler(object):
 		news_time = time.mktime(time.strptime(news_date,'%Y年%m月%d日'))
 		if (float(news_time) >= float(from_time)):
 			return True
-		print news_date
 		return False
 
 

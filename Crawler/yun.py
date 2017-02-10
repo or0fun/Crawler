@@ -5,6 +5,7 @@ import xlwt#https://pypi.python.org/pypi/xlwt
 
 import sys
 import time
+import os
 
 crawler = Crawler()
 
@@ -51,5 +52,7 @@ for result in crawler.realResults:
     sheet.write(row, 5, result.link)
     row = row + 1
 
+if os.path.exists("output") == False:
+    os.makedirs('output')
 
-f.save("output/" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + "_" + words + '.xls')
+f.save("output/" + fromdate + "_" + words + "_" + str(time.time()) + '.xls')

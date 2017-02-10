@@ -1,11 +1,12 @@
 <html>
 	<head>
 		<meta http-equiv="content-type" content="text/html;charset=utf-8">
-		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.js"></script>
 		<style type="text/css">
 			body{
 				text-align:left;
-				margin-left: 300px;
+				margin-left: 250px;
 			}
 			.s_btn {
 				width: 250px;
@@ -75,12 +76,16 @@
 			$(document).ready(function(){
 				$("#crawler").click(function(){
 					$("#crawler").html("正在爬...一会儿来刷新");
+					$.cookie('crawler_words', $("#words").val(), { expires: 365 }); 
+					$.cookie('crawler_fromdate', $("#fromdate").val(), { expires: 365 }); 
 					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val() + 
 						"&fromdate=" +
 						$("#fromdate").val(),
 						async:true});
 				});
 			});
+			$("#words").val($.cookie('crawler_words'));
+			$("#fromdate").val($.cookie('crawler_fromdate'))
 		</script>
 	</head>
 	<body>
@@ -91,7 +96,7 @@
 		<br/>
 
 		<span class="s_ipt_from">
-			<input name="fromdate" id="fromdate" class="from" value="2016-01-01" maxlength="100" autocomplete="on">
+			<input name="fromdate" id="fromdate" class="from" value="2017-02-01" maxlength="100" autocomplete="on">
 		</span>
 		<span class="s_ipt_wr">
 			<input name="word" id="words" class="s_ipt" value="YunOS" maxlength="100" autocomplete="on">
@@ -115,18 +120,21 @@
 		<br/>
 		<br/>
 		<?php
-			$current_dir = 'Crawler';
+
+		echo "历史记录:<br/>";
+		$current_dir = 'output';
+		if(is_dir($current_dir)) {
 			$dir = opendir($current_dir);
-			echo "历史记录:<br/>";
 			while(false !== ($file=readdir($dir))){
 				if($file != "." && $file != ".." && strstr($file, ".xls")){
-					echo "<a href='http://ie8384.com/pudding/Crawler/$file'>$file</a>";
-					$ctime = filectime("Crawler/".$file);
+					echo "<a href='http://ie8384.com/pudding/".$current_dir."/$file'>$file</a>";
+					$ctime = filectime($current_dir."/".$file);
 					echo "        Created:".date("Y-m-d H:i:s",$ctime);
 					echo "<br/>";
 				}
 			}
 			closedir($dir);
+		}
 		?>
 	</body>
 </html>
