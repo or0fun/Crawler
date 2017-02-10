@@ -17,7 +17,8 @@ class Crawler(object):
 	def __init__(self):  
 
 		self.user_agent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36'
-		self.headers = { 'User-Agent' : self.user_agent }
+		self.headers = { 'User-Agent' : self.user_agent,
+		'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' }
 
 		self.bd_result = True
 		self.realResults = []
@@ -36,6 +37,7 @@ class Crawler(object):
 		        print e.code
 		    if hasattr(e,"reason"):
 		        print e.reason
+		    print e
 		return ""
 
 	def bd_crawler(self, url):
@@ -79,6 +81,10 @@ class Crawler(object):
 				behavior = self.zol(result.link)
 				result.bevavior = behavior
 
+			if result.link.find('ifeng.com') > -1:
+				behavior = self.ifeng(result.link)
+				result.bevavior = behavior
+
 	def hexun(self, url):
  
 		searchObj = re.search( r'/([0-9]+)\.html', url, re.M|re.I)
@@ -102,6 +108,20 @@ class Crawler(object):
 
 		return Behavior(0, 0)
 
+	def ifeng(self, url):
+ 
+		searchObj = re.search( r'/([-a-z0-9]+)\.shtml', url, re.M|re.I)
+		if searchObj:
+			comment_url = "http://survey.news.ifeng.com/getaccumulator_weight.php?format=js&serverid=2&key=" + searchObj.group(1) + "&callback=f15a288854f41"
+
+			content = self.request_content(comment_url)
+    		
+			searchObj = re.search( r'"browse":([0-9]+)}', content, re.M|re.I)
+			if searchObj:
+				return Behavior(searchObj.group(1), 0)
+
+		return Behavior(0, 0)
+
 	def is_time_valid(self, frome_date, news_date):
 		from_time = time.mktime(time.strptime(frome_date,'%Y-%m-%d')) # get the seconds for specify date
 		if news_date.find('年') == -1:
@@ -113,5 +133,6 @@ class Crawler(object):
 			return True
 		return False
 
-
+	def prn_obj(self, obj):
+		print '\n'.join(['%s:%s' % item for item in obj.__dict__.items()])
 
