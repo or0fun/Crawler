@@ -118,7 +118,7 @@ class Crawler(object):
     		
 			searchObj = re.search( r'"browse":([0-9]+)}', content, re.M|re.I)
 			if searchObj:
-				return Behavior(searchObj.group(1), 0)
+				return Behavior(0, searchObj.group(1))
 
 		return Behavior(0, 0)
 
