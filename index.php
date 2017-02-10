@@ -75,13 +75,16 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#crawler").click(function(){
-					$("#crawler").html("正在爬...一会儿来刷新");
+					$("#msg").html("正在爬...一天的新闻平均需要0.2s");
 					$.cookie('crawler_words', $("#words").val(), { expires: 365 }); 
 					$.cookie('crawler_fromdate', $("#fromdate").val(), { expires: 365 }); 
 					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val() + 
 						"&fromdate=" +
 						$("#fromdate").val(),
-						async:true});
+						async:true,
+						success: function(data){
+							window.location.reload();
+						}});
 				});
 			});
 			$("#words").val($.cookie('crawler_words'));
@@ -116,6 +119,7 @@
 		<br/>
 		<br/>
 		<br/>
+		<p id="msg" ></p>
 		<br/>
 		<br/>
 		<br/>
