@@ -125,19 +125,33 @@
 		<br/>
 		<?php
 
+		function dir_list($dir){
+			$dh = opendir($dir);             
+     		$return = array();
+      		$i = 0;
+          	while($file = readdir($dh)){    
+             	if($file!='.' and $file!='..' && strstr($file, ".xls")){
+              		$path = $dir.'/'.$file;          
+              		$filetime[] = date("Y-m-d H:i:s",filemtime($path));   
+   
+              		$return[] =  $file;
+          		}
+          	}  
+          	closedir($dh);             
+          	array_multisort($filetime,SORT_DESC,SORT_STRING, $return);//按时间排序
+          	return $return;               
+     	}
 		echo "历史记录:<br/>";
 		$current_dir = 'output';
 		if(is_dir($current_dir)) {
-			$dir = opendir($current_dir);
-			while(false !== ($file=readdir($dir))){
-				if($file != "." && $file != ".." && strstr($file, ".xls")){
-					echo "<a href='http://ie8384.com/pudding/".$current_dir."/$file'>$file</a>";
-					$ctime = filectime($current_dir."/".$file);
-					echo "        Created:".date("Y-m-d H:i:s",$ctime);
-					echo "<br/>";
-				}
+			$files = dir_list($current_dir);
+			$num = count($files); 
+			for($i=0; $i<$num; ++$i){ 
+				echo "<a href='http://ie8384.com/pudding/".$current_dir."/$files[$i]'>$files[$i]</a>";
+				$ctime = filectime($current_dir."/".$files[$i]);
+				echo "        Created:".date("Y-m-d H:i:s",$ctime);
+				echo "<br/>";
 			}
-			closedir($dir);
 		}
 		?>
 	</body>
