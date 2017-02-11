@@ -63,8 +63,8 @@ class Crawler(object):
 		self.fromdate = fromdate
 		words = words.replace(' ', '+')
 
-		url = 'http://news.baidu.com/ns?word=title%3A%28'+ str(words) + '%29&pn=' + str(index) + '&cl=2&ct=1&tn=newstitle&rn=20&ie=utf-8&bt=0&et=0&clk=sortbytime'
-		
+		url = 'http://news.baidu.com/ns?word='+ str(words) + '&rn=20&tn=news&clk=sortbytime&pn=' + str(index)
+
 		self.bd_crawler(url)
 
 		for result in self.realResults:

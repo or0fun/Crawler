@@ -24,7 +24,7 @@ class BdResultsParser(HTMLParser):
     def is_result_title(self,tag,attrs):
         if tag == 'div' and attrs:
             for key, value in attrs:
-                if key == 'class' and value.find('result title') > -1:
+                if key == 'class' and value == 'result':
                     return True
         return False
 
@@ -40,9 +40,9 @@ class BdResultsParser(HTMLParser):
     def is_c_title_author(self,tag,attrs):
         if False == self.isResult:
             return False
-        if tag == 'div' and attrs:
+        if tag == 'p' and attrs:
             for key, value in attrs:
-                if key == 'class' and value == 'c-title-author':
+                if key == 'class' and value == 'c-author':
                     return True
         return False
 
@@ -108,7 +108,7 @@ class BdResultsParser(HTMLParser):
         if self.isCTitle:
             self.title_tmp += data
             return
-        if self.isAuthor and self.tags[-1].tag == 'div':
+        if self.isAuthor and self.tags[-1].tag == 'p':
             if self.info.site == "":
                 self.info.site = data
                 return
