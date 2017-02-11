@@ -146,13 +146,36 @@
      	}
 		echo "历史文件列表:<br/>";
 		$current_dir = 'output';
+		$currentTime = date('Y-m-d H:i:s',time());
 		if(is_dir($current_dir)) {
 			$files = dir_list($current_dir);
 			$num = count($files); 
 			for($i=0; $i<$num; ++$i){ 
 				echo "<a href='http://ie8384.com/pudding/".$current_dir."/$files[$i]'>$files[$i]</a>";
 				$ctime = filectime($current_dir."/".$files[$i]);
-				echo "        Created:".date("Y-m-d H:i:s",$ctime);
+				$createdTime = date("Y-m-d H:i:s",$ctime);
+				$date=floor((strtotime($currentTime)-strtotime($createdTime))/86400);
+				if ($date > 0) {
+					echo "        Created:".$createdTime;
+				}else {
+					echo "        Created:";
+					$currentTime_time = strtotime($currentTime);
+					$createdTime_time = strtotime($createdTime);
+
+					$tmp = ($currentTime_time-$createdTime_time)%86400;
+					$hour=floor($tmp/3600);
+					if ($hour > 0) {
+						echo $hour."小时";
+					}
+					$tmp = $tmp%3600;
+					$minute=floor($tmp/60);
+					if ($minute > 0) {
+						echo $minute."分钟";
+					}
+					$tmp = $tmp%60;
+					$second=floor($tmp);
+					echo $second."秒以前";
+				}
 				echo "<br/>";
 			}
 		}
