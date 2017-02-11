@@ -91,7 +91,7 @@
 			function myrefresh(){ 
 				window.location.reload();
 			}
-			setTimeout('myrefresh()', 10000);
+			setTimeout('myrefresh()', 30000);
 		</script> 
 	</head>
 	<body>
