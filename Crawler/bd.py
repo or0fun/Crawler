@@ -14,12 +14,20 @@ class BdResultsParser(HTMLParser):
         self.isResult = False
         self.isCTitle = False
         self.isAuthor = False
+        self.isCInfo = False
         self.tags = []
 
         self.info = Info()
         self.title_tmp = ""
 
         self.lastTag = ""
+
+    def is_c_info(self,tag,attrs):
+        if tag == 'span' and attrs:
+            for key, value in attrs:
+                if key == 'class' and value == 'c-info':
+                    return True
+        return False
 
     def is_result_title(self,tag,attrs):
         if tag == 'div' and attrs:
@@ -71,7 +79,11 @@ class BdResultsParser(HTMLParser):
             self.isAuthor = True
             return
 
-        if self.isAuthor and tag == 'a':
+        if self.is_c_info(tag, attrs):
+            self.isCInfo = True
+            return
+
+        if self.isCInfo and tag == 'a':
             for key, value in attrs:
                 if key == 'href':
                     if value.startswith('http'): 
@@ -99,6 +111,9 @@ class BdResultsParser(HTMLParser):
                 return
             if self.is_c_title_author(tag.tag, tag.attrs):
                 self.isAuthor = False
+                return
+            if self.is_c_info(tag.tag, tag.attrs):
+                self.isCInfo = False
                 return
 
     def handle_data(self,data):
