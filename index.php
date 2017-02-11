@@ -75,7 +75,7 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#crawler").click(function(){
-					$("#msg").html("正在爬...一天的新闻平均需要0.2s");
+					$("#msg").html("正在后台爬...一天的新闻平均需要0.2s...可以离开页面");
 					$.cookie('crawler_words', $("#words").val(), { expires: 365 }); 
 					$.cookie('crawler_fromdate', $("#fromdate").val(), { expires: 365 }); 
 					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val() + 
@@ -83,13 +83,16 @@
 						$("#fromdate").val(),
 						async:true,
 						success: function(data){
-							window.location.reload();
 						}});
 				});
 			});
-			$("#words").val($.cookie('crawler_words'));
-			$("#fromdate").val($.cookie('crawler_fromdate'))
 		</script>
+		<script language="JavaScript"> 
+			function myrefresh(){ 
+				window.location.reload();
+			}
+			setTimeout('myrefresh()', 10000);
+		</script> 
 	</head>
 	<body>
 
@@ -141,7 +144,7 @@
           	array_multisort($filetime,SORT_DESC,SORT_STRING, $return);//按时间排序
           	return $return;               
      	}
-		echo "历史记录:<br/>";
+		echo "历史文件列表:<br/>";
 		$current_dir = 'output';
 		if(is_dir($current_dir)) {
 			$files = dir_list($current_dir);
@@ -154,5 +157,12 @@
 			}
 		}
 		?>
+
+		<script language="JavaScript"> 
+			if ($.cookie('crawler_words') != null) {
+				$("#words").val($.cookie('crawler_words'));
+				$("#fromdate").val($.cookie('crawler_fromdate'));
+			}
+		</script> 
 	</body>
 </html>

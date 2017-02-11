@@ -14,9 +14,15 @@ bd_index = 0
 words = sys.argv[1]
 fromdate = sys.argv[2]
 
+length = 0
+
 while True:
+
+    length = len(crawler.realResults)
     crawler.bdrun(words, fromdate, bd_index)
     if False == crawler.bd_result:
+        break
+    if len(crawler.realResults) == length:
         break
     bd_index += 20
 

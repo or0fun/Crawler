@@ -46,10 +46,6 @@ class Crawler(object):
 	    parser = BdResultsParser()
 	    parser.feed(content)
 
-	    length = len(parser.results)
-
-	    self.bd_total_count += length
-
 	    for result in parser.results:
 	        if result.children.find('http') > -1:
 	        	self.bd_crawler(result.children)
@@ -58,10 +54,9 @@ class Crawler(object):
 	        		self.realResults.append(result)
 	        		self.bd_result = True
 	        	else:
+	        		print "时间不符合"
+	        		print self.fromdate + " " + result.date
 	        		self.bd_result = False
-
-	    if length < 20:
-	    	self.bd_result = False
 
 	def bdrun(self, words, fromdate, index):
 

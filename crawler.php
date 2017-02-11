@@ -1,5 +1,4 @@
 <?php
-	echo "python Crawler/yun.py ".$_GET['words']." ".$_GET['fromdate'];
-	$cmd = exec("python Crawler/yun.py ".$_GET['words'] . " " . $_GET['fromdate'] . " 2>&1",$ret);
-	print_r($ret);
+	$cmd = exec("nohup python Crawler/yun.py ".$_GET['words'] . " " . $_GET['fromdate'] . " 2>&1 |tee python_error.log &");
+	echo "running"
 ?>
