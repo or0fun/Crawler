@@ -87,9 +87,10 @@ class BdResultsParser(HTMLParser):
             for key, value in attrs:
                 if key == 'href':
                     if value.startswith('http'): 
-                        self.info.children = value
+                        return
                     else:
                         self.info.children = "http://news.baidu.com/" + value
+                    self.isCInfo = False
                     return
 
     def handle_endtag(self,tag):

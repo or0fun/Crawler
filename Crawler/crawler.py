@@ -11,14 +11,16 @@ from tag import Behavior
 
 import time
 
+import sys
+reload(sys)
+sys.setdefaultencoding("utf-8")
 
 class Crawler(object):
 
 	def __init__(self):  
 
 		self.user_agent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36'
-		self.headers = { 'User-Agent' : self.user_agent,
-		'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8' }
+		self.headers = { 'User-Agent' : self.user_agent }
 
 		self.bd_result = True
 		self.realResults = []
@@ -30,7 +32,7 @@ class Crawler(object):
 		try:
 		    request = urllib2.Request(url, headers = self.headers)
 		    response = urllib2.urlopen(request)
-		    content = response.read()
+		    content = response.read().decode('utf-8')
 		    return content
 		except urllib2.URLError, e:
 		    if hasattr(e,"code"):
@@ -54,8 +56,6 @@ class Crawler(object):
 	        		self.realResults.append(result)
 	        		self.bd_result = True
 	        	else:
-	        		print "时间不符合"
-	        		print self.fromdate + " " + result.date
 	        		self.bd_result = False
 
 	def bdrun(self, words, fromdate, index):
@@ -119,11 +119,11 @@ class Crawler(object):
 
 	def is_time_valid(self, frome_date, news_date):
 		from_time = time.mktime(time.strptime(frome_date,'%Y-%m-%d')) # get the seconds for specify date
-		if news_date.find('年') == -1:
+		if news_date.find(u'年') == -1:
 			return True
 		space_index = news_date.find(' ')
 		news_date = news_date[0:space_index]
-		news_time = time.mktime(time.strptime(news_date,'%Y年%m月%d日'))
+		news_time = time.mktime(time.strptime(news_date,u'%Y年%m月%d日'))
 		if (float(news_time) >= float(from_time)):
 			return True
 		return False
