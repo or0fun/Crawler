@@ -30,9 +30,16 @@ class Crawler(object):
 
 	def request_content(self, url):
 		try:
+		    print url
 		    request = urllib2.Request(url, headers = self.headers)
 		    response = urllib2.urlopen(request)
-		    content = response.read().decode('utf-8')
+		    content = response.read()
+		    if content.find('<meta charset="gbk"') > -1:
+		    	content = content.decode('gbk')
+		    elif content.find('<meta charset="gb2312"') > -1:
+		    	content = content.decode('gb2312')
+		    else:
+		    	content = content.decode('utf-8')
 		    return content
 		except urllib2.URLError, e:
 		    if hasattr(e,"code"):

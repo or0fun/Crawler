@@ -75,7 +75,7 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#crawler").click(function(){
-					$("#msg").html("正在后台爬...一天的新闻平均需要0.2s...可以离开页面");
+					$("#msg").html("正在后台爬......可以离开页面....页面每30s自动刷新");
 					$.cookie('crawler_words', $("#words").val(), { expires: 365 }); 
 					$.cookie('crawler_fromdate', $("#fromdate").val(), { expires: 365 }); 
 					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val() + 

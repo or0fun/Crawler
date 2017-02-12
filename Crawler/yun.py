@@ -61,4 +61,4 @@ for result in crawler.realResults:
 if os.path.exists("output") == False:
     os.makedirs('output')
 
-f.save("output/" + fromdate + "_" + words + "_" + str(time.time()) + '.xls')
+f.save("output/" + fromdate + "_" + words + "_" + time.strftime(u'%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + '.xls')
