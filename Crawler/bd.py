@@ -7,9 +7,10 @@ from HTMLParser import HTMLParser
 
 class BdResultsParser(HTMLParser):
 
-    def __init__(self):   
+    def __init__(self, baseInfo):   
         HTMLParser.__init__(self) 
 
+        self.baseInfo = baseInfo
         self.results = []
         self.isResult = False
         self.isCTitle = False
@@ -101,8 +102,13 @@ class BdResultsParser(HTMLParser):
         tag = self.tags.pop()
         if self.is_result_title(tag.tag, tag.attrs):
             self.isResult = False
-            self.results.append(self.info)
-            return
+            if None == self.baseInfo:
+                self.results.append(self.info)
+            else:
+                if self.baseInfo.title == self.info.title and self.baseInfo.date == self.info.date and self.baseInfo.site == self.info.site:
+                    return
+                else:
+                    self.results.append(self.info)
 
         if self.isResult:
             if self.is_c_title(tag.tag, tag.attrs):

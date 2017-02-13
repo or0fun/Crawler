@@ -49,21 +49,22 @@ class Crawler(object):
 		    print e
 		return ""
 
-	def bd_crawler(self, url):
+	def bd_crawler(self, url, baseInfo):
 
 	    content = self.request_content(url)
-	    parser = BdResultsParser()
+	    parser = BdResultsParser(baseInfo)
 	    parser.feed(content)
 
 	    for result in parser.results:
-	        if result.children.find('http') > -1:
-	        	self.bd_crawler(result.children)
+	        if self.is_time_valid(self.fromdate, result.date):
+	        	self.realResults.append(result)
+	        	self.bd_result = True
 	        else:
-	        	if self.is_time_valid(self.fromdate, result.date):
-	        		self.realResults.append(result)
-	        		self.bd_result = True
-	        	else:
-	        		self.bd_result = False
+	        	self.bd_result = False
+
+	        if result.children.find('http') > -1:
+	        	self.bd_crawler(result.children, result)
+	       
 
 	def bdrun(self, words, fromdate, index):
 
@@ -72,7 +73,7 @@ class Crawler(object):
 
 		url = 'http://news.baidu.com/ns?word='+ str(words) + '&rn=20&tn=news&clk=sortbytime&pn=' + str(index)
 
-		self.bd_crawler(url)
+		self.bd_crawler(url, None)
 
 		for result in self.realResults:
 			if result.link.find('hexun.com') > -1:
