@@ -94,7 +94,6 @@ class Crawler(object):
 			comment_url = 'http://comment.tool.hexun.com/Comment/GetComment.do?commentsource=3&articleid=' + searchObj.group(1) + '&articlesource=1&pagenum=1&pagesize=3&callback=hexunapi_04351924806556662'
 
 			content = self.request_content(comment_url)
-    		
 			searchObj = re.search( r'"commentcount":([0-9]+),', content, re.M|re.I)
 			if searchObj:
 				return Behavior(searchObj.group(1), 0)
