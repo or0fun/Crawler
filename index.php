@@ -151,7 +151,9 @@
 			$files = dir_list($current_dir);
 			$num = count($files); 
 			for($i=0; $i<$num; ++$i){ 
-				echo "<a href='http://ie8384.com/pudding/".$current_dir."/$files[$i]'>$files[$i]</a>";
+				$url='http://'.$_SERVER['HTTP_HOST'].$_SERVER["REQUEST_URI"];
+				
+				echo "<a href='".$url."/".$current_dir."/$files[$i]'>$files[$i]</a>";
 				$ctime = filectime($current_dir."/".$files[$i]);
 				$createdTime = date("Y-m-d H:i:s",$ctime);
 				$date=floor((strtotime($currentTime)-strtotime($createdTime))/86400);

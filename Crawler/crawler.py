@@ -7,6 +7,7 @@ import re
 
 import bd
 from bd import BdResultsParser
+from g import GResultsParser
 from tag import Behavior
 
 import time
@@ -19,7 +20,7 @@ class Crawler(object):
 
 	def __init__(self):  
 
-		self.user_agent = 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Mobile Safari/537.36'
+		self.user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36'
 		self.headers = { 'User-Agent' : self.user_agent }
 
 		self.bd_result = True
@@ -30,12 +31,13 @@ class Crawler(object):
 
 	def request_content(self, url):
 		try:
-		    print url
 		    request = urllib2.Request(url, headers = self.headers)
 		    response = urllib2.urlopen(request)
 		    content = response.read()
 		    if content.find('<meta charset="gbk"') > -1:
 		    	content = content.decode('gbk')
+		    elif content.find('<meta charset="UTF-8"') > -1:
+		    	content = content.decode('UTF-8')
 		    elif content.find('<meta charset="gb2312"') > -1:
 		    	content = content.decode('gb2312')
 		    else:
@@ -64,7 +66,32 @@ class Crawler(object):
 
 	        if result.children.find('http') > -1:
 	        	self.bd_crawler(result.children, result)
+
+	def g_crawler(self, url, baseInfo):
+	    content = self.request_content(url)
+	    content = content.replace('</g;Aa=/>','')
+	    
+	    parser = GResultsParser(baseInfo)
+	    parser.feed(content.encode("utf-8"))
+
+	    for result in parser.results:
+	        if self.is_time_valid(self.fromdate, result.date):
+	        	self.realResults.append(result)
+	        	self.bd_result = True
+	        else:
+	        	self.bd_result = False
+
+	        if result.children.find('http') > -1:
+	        	self.g_crawler(result.children, result)
 	       
+	def grun(self, words, fromdate, index):
+
+		self.fromdate = fromdate
+		words = words.replace(' ', '+')
+
+		url = 'http://www.google.com/search?q='+ str(words) + '&hl=en&gl=us&authuser=0&tbm=nws&start=' + str(index)
+
+		self.g_crawler(url, None)
 
 	def bdrun(self, words, fromdate, index):
 

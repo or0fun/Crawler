@@ -8,31 +8,7 @@ import sys
 import time
 import os
 
-def worker(words, fromdate):
-    crawler = Crawler()
-
-    bd_index = 0
-
-    length = 0
-
-    while True:
-
-        length = len(crawler.realResults)
-        crawler.bdrun(words, fromdate, bd_index)
-        if False == crawler.bd_result:
-            break
-        if len(crawler.realResults) == length:
-            break
-        bd_index += 20
-
-    print len(crawler.realResults)
-    # for result in crawler.realResults:
-    #     print result.title
-    #     print result.site
-    #     print result.date
-    #     print result.link
-    #     print result.children
-
+def saveToFile(crawler, filename):
     f = xlwt.Workbook(encoding='utf-8', style_compression=0)
     sheet = f.add_sheet('sheet 1')
 
@@ -61,16 +37,67 @@ def worker(words, fromdate):
     if os.path.exists("output") == False:
         os.makedirs('output')
 
-    filename = "output/" + fromdate + "_" + words + "_" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + '.xls'
     print filename
     f.save(filename)
+
+def bdworker(words, fromdate):
+    crawler = Crawler()
+
+    bd_index = 0
+
+    length = 0
+
+    filename = "output/baidu_" + fromdate + "_" + words + "_" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + '.xls'
+   
+    while True:
+
+        length = len(crawler.realResults)
+        crawler.bdrun(words, fromdate, bd_index)
+        if False == crawler.bd_result:
+            break
+        if len(crawler.realResults) == length:
+            break
+        bd_index += 20
+
+    print len(crawler.realResults)
+    
+    saveToFile(crawler, filename)
+
+def gworker(words, fromdate):
+    crawler = Crawler()
+
+    bd_index = 0
+
+    length = 0
+
+    filename = "output/google_" + fromdate + "_" + words + "_" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + '.xls'
+   
+    while True:
+
+        length = len(crawler.realResults)
+        crawler.grun(words, fromdate, bd_index)
+        if False == crawler.bd_result:
+            break
+        break
+
+    print len(crawler.realResults)
+    
+    saveToFile(crawler, filename)
+
+    
 
 if __name__ == "__main__":
 
     words = sys.argv[1]
     fromdate = sys.argv[2]
-    p = multiprocessing.Process(target = worker, args = (words,fromdate,))
-    p.start()
-    print "p.pid:", p.pid
-    print "p.name:", p.name
-    print "p.is_alive:", p.is_alive()
+    # p = multiprocessing.Process(target = bdworker, args = (words,fromdate,))
+    # p.start()
+    # print "p.pid:", p.pid
+    # print "p.name:", p.name
+    # print "p.is_alive:", p.is_alive()
+
+    p2 = multiprocessing.Process(target = gworker, args = (words,fromdate,))
+    p2.start()
+    print "p2.pid:", p2.pid
+    print "p2.name:", p2.name
+    print "p2.is_alive:", p2.is_alive()
