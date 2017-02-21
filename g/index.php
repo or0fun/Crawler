@@ -79,10 +79,10 @@
 		<script type="text/javascript">
 			$(document).ready(function(){
 				$("#crawler").click(function(){
-					$("#msg").html("正在后台爬.....平均一天需要1s....刷新页面查看结果");
+					$("#msg").html("正在后台爬.....稍后刷新页面可查看结果");
 					$.cookie('crawler_words', $("#words").val(), { expires: 365 }); 
 					$.cookie('crawler_fromdate', $("#fromdate").val(), { expires: 365 }); 
-					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val() + 
+					htmlobj=$.ajax({url:"crawler.php?words=" + $("#words").val().replace(' ', '+') + 
 						"&fromdate=" +
 						$("#fromdate").val(),
 						async:true,
@@ -95,7 +95,7 @@
 			function myrefresh(){ 
 				window.location.reload();
 			}
-			setTimeout('myrefresh()', 30000);
+			// setTimeout('myrefresh()', 30000);
 		</script> 
 	</head>
 	<body>
@@ -113,8 +113,8 @@
 			
 		</span>
 		<span>
-		<button id="crawler" class="s_btn">爬一下百度新闻</button>
-		<a href="http://pudding.ie8384.com/pudding/">跳转到 Google News</a>
+		<button id="crawler" class="s_btn">爬一下Google News</button>
+		<a href="http://ie8384.com/pudding/">跳转到百度新闻</a>
 		</span>
 		
 	
@@ -123,7 +123,7 @@
 <br/>
 
 		1、起始时间格式为yyyy-mm-dd，如：2016-02-03<br/>
-		2、多个关键词以空格隔开
+		2、多个关键词以空格隔开<br/>
 		3、爬一天的新闻大概需要1s
 		<br/>
 		<br/>

@@ -117,13 +117,10 @@ class GResultsParser(HTMLParser):
                 return
 
     def handle_data(self,data):
-        if len(data) < 100:
-            print data
-            pass
+
         if self.isResult == False:
             return
-
-        print data
+            
         if self.isCTitle:
             self.title_tmp += data
             return

@@ -70,12 +70,12 @@ class Crawler(object):
 	def g_crawler(self, url, baseInfo):
 	    content = self.request_content(url)
 	    content = content.replace('</g;Aa=/>','')
-	    
+
 	    parser = GResultsParser(baseInfo)
 	    parser.feed(content.encode("utf-8"))
 
 	    for result in parser.results:
-	        if self.is_time_valid(self.fromdate, result.date):
+	        if self.is_time_valid_g(self.fromdate, result.date):
 	        	self.realResults.append(result)
 	        	self.bd_result = True
 	        else:
@@ -89,7 +89,7 @@ class Crawler(object):
 		self.fromdate = fromdate
 		words = words.replace(' ', '+')
 
-		url = 'http://www.google.com/search?q='+ str(words) + '&hl=en&gl=us&authuser=0&tbm=nws&start=' + str(index)
+		url = 'http://www.google.com/search?q='+ str(words) + '&hl=en&gl=us&authuser=0&tbm=nws&tbs=sbd:1&start=' + str(index)
 
 		self.g_crawler(url, None)
 
@@ -160,6 +160,17 @@ class Crawler(object):
 		news_time = time.mktime(time.strptime(news_date,u'%Y年%m月%d日'))
 		if (float(news_time) >= float(from_time)):
 			return True
+		return False
+
+	def is_time_valid_g(self, frome_date, news_date):
+		from_time = time.mktime(time.strptime(frome_date,'%Y-%m-%d')) # get the seconds for specify date
+		if news_date.find(u', ') == -1:
+			return True
+		news_time = time.mktime(time.strptime(news_date,u'%b %d, %Y'))
+		if (float(news_time) >= float(from_time)):
+			return True
+		print news_time
+		print news_date
 		return False
 
 	def prn_obj(self, obj):

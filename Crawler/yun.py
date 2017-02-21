@@ -66,19 +66,19 @@ def bdworker(words, fromdate):
 def gworker(words, fromdate):
     crawler = Crawler()
 
-    bd_index = 0
+    g_index = 0
 
     length = 0
 
-    filename = "output/google_" + fromdate + "_" + words + "_" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + '.xls'
+    filename = "/home/wwwroot/default/pudding/output/google_" + fromdate + "_" + words + "_" + time.strftime('%Y年%m月%d日%H时%M分%S秒',time.localtime(time.time())) + '.xls'
    
     while True:
 
         length = len(crawler.realResults)
-        crawler.grun(words, fromdate, bd_index)
+        crawler.grun(words, fromdate, g_index)
         if False == crawler.bd_result:
             break
-        break
+        g_index += 10
 
     print len(crawler.realResults)
     
@@ -90,6 +90,8 @@ if __name__ == "__main__":
 
     words = sys.argv[1]
     fromdate = sys.argv[2]
+    print words
+    print fromdate
     # p = multiprocessing.Process(target = bdworker, args = (words,fromdate,))
     # p.start()
     # print "p.pid:", p.pid
